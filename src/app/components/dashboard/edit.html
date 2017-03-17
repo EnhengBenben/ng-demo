@@ -1,0 +1,42 @@
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>编辑课程</h5>
+        <div class="pull-right">
+            <div class="btn btn-sm btn-primary" ui-sref="app.dashboard.list">返回</div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <form name="create" class="form-horizontal" ng-submit="vm.submit()">
+            <div class="form-group">
+                <div class="col-md-2 control-label">
+                    <label>课程名称</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" placeholder="请输入课程名称" ng-model="vm.create.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2 control-label">
+                    <label>上课人数</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="number" class="form-control" placeholder="请输入上课人数" ng-model="vm.create.number">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-2 control-label">
+                    <label>课程导师</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" placeholder="请输入课程导师" ng-model="vm.create.teacher">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                    <button type="submit" class="btn btn-primary">确认修改</button>
+                    <div class="btn btn-default" ui-sref="app.dashboard.list">取消</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

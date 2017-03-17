@@ -1,1 +1,37 @@
-123
+<div class="ibox">
+    <div class="ibox-title">
+        <h5>课程列表</h5>
+        <div class="pull-right">
+            <div class="btn btn-sm btn-primary" ui-sref="app.dashboard.create"><i class="fa fa-plus"></i> 添加课程</div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-hover" style="border-bottom: 1px solid #eee">
+            <tr>
+                <td>序号</td>
+                <td>课程名称</td>
+                <td>招收人数</td>
+                <td>操作</td>
+            </tr>
+            <tr ng-repeat="user in vm.lists track by $index">
+                <td>{{$index + 1}}</td>
+                <td><a ui-sref="app.dashboard.show({id: user.id})">{{user.name}}</a></td>
+                <td>{{user.count}}</td>
+                <td>
+                    <button class="btn btn-white btn-xs" ui-sref="app.dashboard.edit({id: user.id})" uib-tooltip="编辑"><i class="fa fa-edit"></i></button>
+                    <button class="btn btn-white btn-xs" ng-click="vm.remove(user.id)" uib-tooltip="删除"><i class="fa fa-trash-o"></i></button>
+                </td>
+            </tr>
+        </table>
+        <p ng-if="vm.lists && !vm.lists.length" style="text-align: center">暂无数据</p>
+        <ul uib-pagination total-items="bigTotalItems"
+            ng-model="bigCurrentPage"
+            max-size="maxSize"
+            previous-text="上一页"
+            next-text="下一页"
+            class="pagination-sm"
+            boundary-link-numbers="true"
+            rotate="false">
+        </ul>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 /**
  * Created by yong on 2017/3/16.
  */
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -20,6 +20,21 @@
                 url: '/list',
                 templateUrl: 'app/components/dashboard/list.html',
                 controller: 'DashboardListCtrl as vm'
+            })
+            .state('app.dashboard.edit', {
+                url: '/edit/:id',
+                templateUrl: 'app/components/dashboard/edit.html',
+                controller: 'DashboardEditCtrl as vm'
+            })
+            .state('app.dashboard.create', {
+                url: '/create',
+                templateUrl: 'app/components/dashboard/create.html',
+                controller: 'DashboardCreateCtrl as vm'
+            })
+            .state('app.dashboard.show', {
+                url: '/show/:id',
+                templateUrl: 'app/components/dashboard/show.html',
+                controller: 'DashboardShowCtrl as vm'
             });
 
     }
