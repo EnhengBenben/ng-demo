@@ -11,16 +11,16 @@ var $ = require('gulp-load-plugins')({
 gulp.task('partials', function () {
   return gulp.src([
     path.join(conf.paths.src, '/app/**/*.html'),
-    path.join(conf.paths.tmp, '/serve/app/**/*.html')
+    path.join(conf.paths.tmp, '/serve/app/**/*.html'),
+    path.join('!'+conf.paths.src, '/**/plugins/**/*.html'),
   ])
-    .pipe($.htmlmin({
-      removeEmptyAttributes: true,
-      removeAttributeQuotes: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true
+    .pipe($.minifyHtml({
+      empty: true,
+      spare: true,
+      quotes: true
     }))
     .pipe($.angularTemplatecache('templateCacheHtml.js', {
-      module: 'ngDemo',
+      module: 'avcUi',
       root: 'app'
     }))
     .pipe(gulp.dest(conf.paths.tmp + '/partials/'));
@@ -34,45 +34,44 @@ gulp.task('html', ['inject', 'partials'], function () {
     addRootSlash: false
   };
 
-  var htmlFilter = $.filter('*.html', { restore: true });
-  var jsFilter = $.filter('**/*.js', { restore: true });
-  var cssFilter = $.filter('**/*.css', { restore: true });
+  var htmlFilter = $.filter('*.html');
+  var jsFilter = $.filter('**/*.js');
+  var cssFilter = $.filter('**/*.css');
+  var assets;
 
   return gulp.src(path.join(conf.paths.tmp, '/serve/*.html'))
     .pipe($.inject(partialsInjectFile, partialsInjectOptions))
-    .pipe($.useref())
+    .pipe(assets = $.useref.assets())
+    .pipe($.rev())
     .pipe(jsFilter)
-    .pipe($.sourcemaps.init())
     .pipe($.ngAnnotate())
     .pipe($.uglify({ preserveComments: $.uglifySaveLicense })).on('error', conf.errorHandler('Uglify'))
-    .pipe($.rev())
-    .pipe($.sourcemaps.write('maps'))
-    .pipe(jsFilter.restore)
+    .pipe(jsFilter.restore())
     .pipe(cssFilter)
-    // .pipe($.sourcemaps.init())
-    .pipe($.replace('../../bower_components/material-design-iconfont/iconfont/', '../fonts/'))
-    .pipe($.cssnano())
-    .pipe($.rev())
-    // .pipe($.sourcemaps.write('maps'))
-    .pipe(cssFilter.restore)
+    .pipe($.replace('/bower_components/bootstrap/fonts/', '/app/fonts/'))
+    .pipe($.replace('/bower_components/font-awesome/fonts/', '/app/fonts/'))
+    .pipe($.csso())
+    .pipe(cssFilter.restore())
+    .pipe(assets.restore())
+    .pipe($.useref())
     .pipe($.revReplace())
     .pipe(htmlFilter)
-    .pipe($.htmlmin({
-      removeEmptyAttributes: true,
-      removeAttributeQuotes: true,
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true
+    .pipe($.minifyHtml({
+      empty: true,
+      spare: true,
+      quotes: true,
+      conditionals: true
     }))
-    .pipe(htmlFilter.restore)
+    .pipe(htmlFilter.restore())
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')))
     .pipe($.size({ title: path.join(conf.paths.dist, '/'), showFiles: true }));
-  });
+});
 
 // Only applies for fonts from bower dependencies
 // Custom fonts are handled by the "other" task
 gulp.task('fonts', function () {
-  return gulp.src($.mainBowerFiles().concat('bower_components/material-design-iconfont/iconfont/*'))
-    .pipe($.filter('**/*.{eot,otf,svg,ttf,woff,woff2}'))
+  return gulp.src($.mainBowerFiles())
+    .pipe($.filter('**/*.{eot,svg,ttf,woff,woff2}'))
     .pipe($.flatten())
     .pipe(gulp.dest(path.join(conf.paths.dist, '/fonts/')));
 });
@@ -90,8 +89,20 @@ gulp.task('other', function () {
     .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
 });
 
-gulp.task('clean', function () {
-  return $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')]);
+gulp.task('assets', function () {
+  var fileFilter = $.filter(function (file) {
+    return file.stat.isFile();
+  });
+
+  return gulp.src([
+    path.join(conf.paths.src, '/**/assets/**/*')
+  ])
+    .pipe(fileFilter)
+    .pipe(gulp.dest(path.join(conf.paths.dist, '/')));
 });
 
-gulp.task('build', ['html', 'fonts', 'other']);
+gulp.task('clean', function (done) {
+  $.del([path.join(conf.paths.dist, '/'), path.join(conf.paths.tmp, '/')], done);
+});
+
+gulp.task('build', ['html', 'fonts', 'other','assets']);
