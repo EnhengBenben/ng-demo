@@ -1,1 +1,67 @@
-<div ui-view=""></div>
+<!-- Wrapper-->
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul side-navigation class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+          <span style="color:white;">
+            华点云demo系统
+          </span>
+                    </div>
+                    <div class="logo-element">
+                        <i class="fa fa-2x fa-medkit"></i>
+                    </div>
+                </li>
+                <li ng-class="{active: $state.includes('app.dashboard')}">
+                    <a href=""><i class="fa fa-graduation-cap" aria-hidden="true"></i><span class="nav-label">课程管理</span><span
+                            class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level" ng-class="{in: $state.includes('app.dashboard')}">
+                        <li ui-sref-active="active"><a ui-sref="app.dashboard.list">课程列表</a></li>
+                        <li ui-sref-active="active"><a ui-sref="app.dashboard.create">添加课程</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page wraper -->
+    <!-- ng-class with current state name give you the ability to extended customization your view -->
+    <div id="page-wrapper" class="gray-bg">
+
+        <!-- Page wrapper -->
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0;">
+                <div class="navbar-header">
+                    <span minimaliza-sidebar></span>
+                </div>
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <a ng-click="app.logout()">
+                            <i class="fa fa-sign-out"></i> 退出
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main view  -->
+        <div style="padding:20px 0 40px 0" ui-view></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="pull-right">
+
+            </div>
+            <div>
+                <strong>Copyright</strong> 北京华点云 &copy; 2017
+            </div>
+        </div>
+
+    </div>
+    <!-- End page wrapper-->
+
+</div>
+<!-- End wrapper-->
