@@ -1,7 +1,9 @@
 {
   "name": "ngDemo",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "font-awesome": "^4.7.0"
+  },
   "scripts": {
     "test": "gulp test"
   },
